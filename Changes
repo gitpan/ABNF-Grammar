@@ -1,5 +1,8 @@
 Revision history for Perl extension ABNF::Grammar.
 
+0.04  Fri Jun 14 23:47:51 2013
+	- added files to MANIFEST
+
 0.03  Fri Jun 14 23:31:51 2013
 	- minor changes about pod again
 	- added Regexp::Grammars dependence
