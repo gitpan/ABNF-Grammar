@@ -20,8 +20,9 @@ no_index:
 requires:
   Parse::ABNF: 0.05
   Readonly: 1.03
+  Regexp::Grammars: 1.028
   Storable: 2.39
   perl: 5.014
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.02
+version: 0.03

@@ -1,4 +1,4 @@
-ABNF-Grammar version 0.02
+ABNF-Grammar version 0.03
 =========================
 
 ABNF-Grammar - validator and generator for ABNF grammars.

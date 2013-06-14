@@ -16,6 +16,7 @@ WriteMakefile(
         'Parse::ABNF'         => 0.05,
         'Storable'            => 2.39,
 		'Method::Signatures ' => 20130505,
+		'Regexp::Grammars'    => 1.028,
 		'Readonly'            => 1.03,
     },
 	META_MERGE   => {

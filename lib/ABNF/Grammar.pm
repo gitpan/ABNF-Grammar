@@ -5,18 +5,23 @@ package ABNF::Grammar;
 =head1 NAME
 
 B<ABNF-Grammar> - validator and generator for ABNF grammars.
+
 B<ABNF::Grammar> - class for inner representation ABNF-grammar.
 
 =head1 VERSION
 
-This document describes B<ABNF::Grammar> version 0.02
+This document describes B<ABNF::Grammar> version 0.03
 
 =head1 SYNOPSIS
 
 use ABNF::Grammar qw(Grammar);
+
 use ABNF::Generator qw(asStrings);
+
 use ABNF::Generator::Honest qw(Honest);
+
 use ABNF::Generator::Liar qw(Liar);
+
 use ABNF::Validator qw(Validator);
 
 my $grammar = Grammar->new("smtp.bnf", qw(ehlo helo mail rcpt data rset vrfy noop quit data data-terminate));
@@ -70,7 +75,7 @@ use Storable qw(dclone);
 
 use base "Exporter";
 our @EXPORT_OK = qw(splitRule Grammar $BASIC_RULES);
-our $VERSION = 0.02;
+our $VERSION = 0.03;
 
 Readonly our $BASIC_RULES => do {
 	my $res = {};
@@ -87,7 +92,9 @@ Readonly our $BASIC_RULES => do {
 =head1 ABNF::Grammar->C<new>($fname, @commands)
 
 Creates a new B<ABNF::Grammar> object.
+
 Read ABNF rules from file with $fname.
+
 @commands consists of main command names for generation and validation.
 
 =cut
@@ -123,7 +130,9 @@ method new(Str $fname, @commands) {
 =head1 ABNF::Grammar->C<fromString>($content, @commands)
 
 Creates a new B<ABNF::Grammar> object.
+
 Get ABNF rules from string $rule
+
 @commands consists of main command names for generation and validation.
 
 =cut
@@ -163,8 +172,11 @@ method _init($content) {
 =head1 $grammar->C<rule>($name)
 
 Return rule form $name with name $name.
+
 Result structure is identical to B<Parse::ABNF> structure.
+
 For debug only.
+
 Do not modify result structure.
 
 =cut
@@ -179,8 +191,11 @@ method rule(Str $name) {
 =head1 $grammar->C<rules>()
 
 Return all rules.
+
 Result structures is identical to B<Parse::ABNF> structure.
+
 For debug only.
+
 Do not modify result structure.
 
 =cut
@@ -194,7 +209,9 @@ method rules() {
 =head1 $grammar->C<replaceRule>($rule, $value)
 
 Replace $rule with $value.
+
 For debug use only.
+
 dies if there is no rule like $rule.
 
 =cut
@@ -210,7 +227,9 @@ method replaceRule(Str $rule, $value) {
 =head1 $grammar->C<replaceBasicRule>($rule, $value)
 
 Replace $rule with $value.
+
 For debug use only.
+
 dies if there is no rule like $rule.
 
 =cut
@@ -254,7 +273,7 @@ method commands() {
 
 In scalar context return prefix only, in list -- prefix and arguments rules.
 
-$rule is structure that returns from B<rule> and like in B<Parse::ABNF>.
+$rule is structure that returns from C<rule> and like in B<Parse::ABNF>.
 
 =cut
 
@@ -354,6 +373,7 @@ L<http://www.perlmonks.org/?node_id=957506>
 =head1 AUTHOR / COPYRIGHT / LICENSE
 
 Copyright (c) 2013 Arseny Krasikov <nyaapa@cpan.org>.
+
 This module is licensed under the same terms as Perl itself.
 
 =cut
