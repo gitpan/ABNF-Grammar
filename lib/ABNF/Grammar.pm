@@ -4,12 +4,12 @@ package ABNF::Grammar;
 
 =head1 NAME
 
-ABNF-Grammar - validator and generator for ABNF grammars.
-ABNF::Grammar - class for inner representation ABNF-grammar.
+B<ABNF-Grammar> - validator and generator for ABNF grammars.
+B<ABNF::Grammar> - class for inner representation ABNF-grammar.
 
 =head1 VERSION
 
-This document describes ABNF::Grammar version 0.01
+This document describes B<ABNF::Grammar> version 0.02
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ my $string = $honest->generate("helo");
 =head1 DESCRIPTION
 
 This module parses IETF ABNF (STD 68, RFC 5234, 4234, 2234) grammars
-via C<Parse::ABNF> and provides tools to :
+via B<Parse::ABNF> and provides tools to :
 
 =over 4
 
@@ -70,7 +70,7 @@ use Storable qw(dclone);
 
 use base "Exporter";
 our @EXPORT_OK = qw(splitRule Grammar $BASIC_RULES);
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 Readonly our $BASIC_RULES => do {
 	my $res = {};
@@ -86,7 +86,7 @@ Readonly our $BASIC_RULES => do {
 
 =head1 ABNF::Grammar->C<new>($fname, @commands)
 
-Creates a new ABNF::Grammar object.
+Creates a new B<ABNF::Grammar> object.
 Read ABNF rules from file with $fname.
 @commands consists of main command names for generation and validation.
 
@@ -122,7 +122,7 @@ method new(Str $fname, @commands) {
 
 =head1 ABNF::Grammar->C<fromString>($content, @commands)
 
-Creates a new ABNF::Grammar object.
+Creates a new B<ABNF::Grammar> object.
 Get ABNF rules from string $rule
 @commands consists of main command names for generation and validation.
 
@@ -327,7 +327,7 @@ __END__
 
 =head1 BUG REPORTS
 
-Please report bugs in this module via <nyaapa@gmail.com>
+Please report bugs in this module via <nyaapa@cpan.org>
 
 =head1 SEE ALSO
 
@@ -353,7 +353,7 @@ L<http://www.perlmonks.org/?node_id=957506>
 
 =head1 AUTHOR / COPYRIGHT / LICENSE
 
-Copyright (c) 2013 Arseny Krasikov <nyaapa@gmail.com>.
+Copyright (c) 2013 Arseny Krasikov <nyaapa@cpan.org>.
 This module is licensed under the same terms as Perl itself.
 
 =cut

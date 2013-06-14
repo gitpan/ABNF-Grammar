@@ -8,7 +8,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     NAME              => 'ABNF::Grammar',
-    AUTHOR            => 'Arseny Krasikov <nyaapa@cpan.com>',
+    AUTHOR            => 'Arseny Krasikov <nyaapa@cpan.org>',
     LICENSE           => 'perl_5',
     VERSION_FROM      => 'lib/ABNF/Grammar.pm', # finds $VERSION
     ABSTRACT_FROM     => 'lib/ABNF/Grammar.pm',
@@ -22,7 +22,6 @@ WriteMakefile(
 		requires  => { perl => '5.014' },
 		resources => {
 			license     => 'http://dev.perl.org/licenses/',
-			repository  => 'https://bitbucket.org/afiskon/pl-vkmp3'
 		},
 	}
 );

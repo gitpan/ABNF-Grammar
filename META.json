@@ -1,7 +1,7 @@
 {
-   "abstract" : "class for inner representation ABNF-grammar.",
+   "abstract" : "unknown",
    "author" : [
-      "Arseny Krasikov <nyaapa@cpan.com>"
+      "Arseny Krasikov <nyaapa@cpan.org>"
    ],
    "dynamic_config" : 1,
    "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.112621",
@@ -43,10 +43,7 @@
    "resources" : {
       "license" : [
          "http://dev.perl.org/licenses/"
-      ],
-      "repository" : {
-         "url" : "https://bitbucket.org/afiskon/pl-vkmp3"
-      }
+      ]
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }

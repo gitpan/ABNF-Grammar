@@ -1,16 +1,39 @@
-ABNF-Grammar version 0.01
+ABNF-Grammar version 0.02
 =========================
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+ABNF-Grammar - validator and generator for ABNF grammars.
 
-A README file is required for CPAN modules since CPAN extracts the
-README file from a module distribution so that people browsing the
-archive can use it get an idea of the modules uses. It is usually a
-good idea to provide version information here so that people can
-decide whether fixes for the module are worth downloading.
+This module parses IETF ABNF (STD 68, RFC 5234, 4234, 2234) grammars via Parse::ABNF and provides tools to :
+   * verify validity of string;
+   * generate valid messages;
+   * generate invalid messages.
+
+SYNOPSIS
+
+use ABNF::Grammar qw(Grammar);
+use ABNF::Generator qw(asStrings);
+use ABNF::Generator::Honest qw(Honest);
+use ABNF::Generator::Liar qw(Liar);
+use ABNF::Validator qw(Validator);
+
+my $grammar = Grammar->new("smtp.bnf", qw(ehlo helo mail rcpt data rset vrfy noop quit data data-terminate));
+my $valid = Validator->new($grammar);
+my $liar = Liar->new($grammar, $valid);
+my $honest = Honest->new($grammar, $valid);
+
+$valid->validate("vrfy", "string");
+
+my @strings = $liar->withoutArguments("vrfy");
+
+my $string = $liar->unExistedCommand("vrfy");
+
+my $string = $liar->endlessCommand("vrfy");
+
+my $string = $liar->generate("helo");
+
+my $string = $honest->generate("helo");
+
+
 
 INSTALLATION
 
@@ -23,18 +46,17 @@ To install this module type the following:
 
 DEPENDENCIES
 
-This module requires these other modules and libraries:
+   * Parse::ABNF => 0.05;
+   * Storable => 2.39;
+   * Method::Signatures => 20130505;
+   * Readonly => 1.03;
+   * perl >= 5.014.
 
-  blah blah blah
+BUG REPORTS
 
-COPYRIGHT AND LICENCE
+Please report bugs in this module via <nyaapa@cpan.org>
 
-Put the correct copyright and licence information here.
+AUTHOR / COPYRIGHT / LICENSE
 
-Copyright (C) 2013 by nyaapa
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.16.3 or,
-at your option, any later version of Perl 5 you may have available.
-
-
+Copyright (c) 2013 Arseny Krasikov <nyaapa@cpan.org>.
+This module is licensed under the same terms as Perl itself.
