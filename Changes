@@ -1,5 +1,8 @@
 Revision history for Perl extension ABNF::Grammar.
 
+0.05  Fri Jun 14 23:47:51 2013
+	- fixed dependence from Method::Signatures
+
 0.04  Fri Jun 14 23:47:51 2013
 	- added files to MANIFEST
 

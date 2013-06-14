@@ -8,16 +8,17 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     NAME              => 'ABNF::Grammar',
+	DISTNAME          => "ABNF-Grammar",
     AUTHOR            => 'Arseny Krasikov <nyaapa@cpan.org>',
     LICENSE           => 'perl_5',
     VERSION_FROM      => 'lib/ABNF/Grammar.pm', # finds $VERSION
     ABSTRACT_FROM     => 'lib/ABNF/Grammar.pm',
     PREREQ_PM         => {
-        'Parse::ABNF'         => 0.05,
-        'Storable'            => 2.39,
-		'Method::Signatures ' => 20130505,
-		'Regexp::Grammars'    => 1.028,
-		'Readonly'            => 1.03,
+        'Parse::ABNF'         => "0.05",
+        'Storable'            => "2.39",
+		'Method::Signatures' => 0,
+		'Regexp::Grammars'    => "1.028",
+		'Readonly'            => "1.03",
     },
 	META_MERGE   => {
 		requires  => { perl => '5.014' },
