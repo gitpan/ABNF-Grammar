@@ -40,9 +40,7 @@ use ABNF::Validator;
 use base qw(Exporter);
 our @EXPORT_OK = qw($CONVERTERS $BASIC_RULES $RECURSION_LIMIT);
 
-Readonly our $CHOICE_LIMIT => 256;
-Readonly our $RECURSION_LIMIT => 32;
-
+Readonly our $CHOICE_LIMIT => 128;
 
 Readonly our $CONVERTERS => {
 	"hex" => sub { hex($_[0]) },
@@ -98,135 +96,135 @@ method _init() {
 
 =pod
 
-=head1 $generator->C<_range>($rule, $level)
+=head1 $generator->C<_range>($rule, $recursion)
 
 Generates chain for range element.
 
 Abstract method, most of all children must overload it.
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _range($rule, $level) {
+method _range($rule, $recursion) {
 	croak "Range handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_string>($rule, $level)
+=head1 $generator->C<_string>($rule, $recursion)
 
 Generates chain for string element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _string($rule, $level) {
+method _string($rule, $recursion) {
 	croak "String handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_literal>($rule, $level)
+=head1 $generator->C<_literal>($rule, $recursion)
 
 Generates chain for literal element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _literal($rule, $level) {
+method _literal($rule, $recursion) {
 	croak "Literal handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_repetition>($rule, $level)
+=head1 $generator->C<_repetition>($rule, $recursion)
 
 Generates chain for repetition element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _repetition($rule, $level) {
+method _repetition($rule, $recursion) {
 	croak "Repetition handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_reference>($rule, $level)
+=head1 $generator->C<_reference>($rule, $recursion)
 
 Generates chain for reference element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _reference($rule, $level) {
+method _reference($rule, $recursion) {
 	croak "Reference handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_group>($rule, $level)
+=head1 $generator->C<_group>($rule, $recursion)
 
 Generates chain for group element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _group($rule, $level) {
+method _group($rule, $recursion) {
 	croak "Group handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_choice>($rule, $level)
+=head1 $generator->C<_choice>($rule, $recursion)
 
 Generates chain for choce element.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _choice($rule, $level) {
+method _choice($rule, $recursion) {
 	croak "Choice handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_rule>($rule, $level)
+=head1 $generator->C<_rule>($rule, $recursion)
 
 Generates chain for rule element, usually -- basic element in chain.
 
 Abstract method, most of all children must overload it
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
 
 =cut
 
-method _rule($rule, $level) {
+method _rule($rule, $recursion) {
 	croak "Rule handler is undefined yet";
 }
 
 =pod
 
-=head1 $generator->C<_generateChain>($rule, $level)
+=head1 $generator->C<_generateChain>($rule, $recursion)
 
 Generates one chain per different rule in $rule.
 
@@ -234,11 +232,17 @@ $rule is structure that Return from B<ABNF::Grammar::rule> and like in B<Parse::
 
 $rule might be a command name.
 
-$level shows recursion level.
+$recursion is a structure to controle recursion depth.
+
+at init it have only one key -- level == 0.
+
+You can create new object perl call or use one.
+
+See use example in ABNF::Generator::Honest in method _choice
 
 =cut
 
-method _generateChain($rule, $level) {
+method _generateChain($rule, $recursion) {
 
 	my @result = ();
 
@@ -253,7 +257,7 @@ method _generateChain($rule, $level) {
 	$self->{handlers}->{ $rule->{class} }
 	or die "Unknown class " . $rule->{class};
 
-	return $self->{handlers}->{ $rule->{class} }->($self, $rule, $level + 1);
+	return $self->{handlers}->{ $rule->{class} }->($self, $rule, $recursion);
 }
 
 =pod
@@ -277,7 +281,7 @@ method generate(Str $rule, Str $tail="") {
 
 	$self->{_cache}->{$rule} ||= [];
 	unless ( @{$self->{_cache}->{$rule}} ) {
-		$self->{_cache}->{$rule} = _asStrings( $self->_generateChain($rule, 1) );
+		$self->{_cache}->{$rule} = _asStrings( $self->_generateChain($rule, {level => 0}) );
 	}
 	my $result = pop($self->{_cache}->{$rule});
 	

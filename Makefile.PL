@@ -12,7 +12,7 @@ WriteMakefile(
     AUTHOR            => 'Arseny Krasikov <nyaapa@cpan.org>',
     LICENSE           => 'perl_5',
     VERSION_FROM      => 'lib/ABNF/Grammar.pm', # finds $VERSION
-    ABSTRACT_FROM     => 'lib/ABNF/Grammar.pm',
+    ABSTRACT          => 'Validator and generator module for ABNF grammars',
     PREREQ_PM         => {
         'Parse::ABNF'         => "0.05",
         'Storable'            => "2.39",

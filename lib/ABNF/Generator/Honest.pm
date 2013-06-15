@@ -6,6 +6,9 @@ package ABNF::Generator::Honest;
 
 B<ABNF::Generator::Honest> - class to generate valid messages for ABNF-based generators
 
+It have $RECURSION_LIMIT = 16. You can change it to increase lower alarm bound on choices and repetition recursion.
+but use it carefully!
+
 =head1 INHERITANCE
 
 B<ABNF::Generator::Honest>
@@ -24,6 +27,8 @@ use warnings;
 no warnings "recursion";
 
 use Data::Dumper;
+use Readonly;
+use List::Util qw(reduce);
 
 use POSIX;
 
@@ -31,9 +36,10 @@ use base qw(ABNF::Generator Exporter);
 
 use Method::Signatures; #some bug in B<Devel::Declare>...
 
-use ABNF::Generator qw($CONVERTERS $RECURSION_LIMIT);
+use ABNF::Generator qw($CONVERTERS);
 
 our @EXPORT_OK = qw(Honest);
+our $RECURSION_LIMIT = 16;
 
 =pod
 
@@ -67,14 +73,14 @@ dies if there is no command like $rule.
 
 =cut
 
-method _range($rule, $level) {
+method _range($rule, $recursion) {
 	my $converter = $CONVERTERS->{$rule->{type}};
 	my $min = $converter->($rule->{min});
 	my $max = $converter->($rule->{max});
 	return {class => "Atom", value => chr($min + int(rand($max - $min + 1)))};
 }
 
-method _string($rule, $level) {
+method _string($rule, $recursion) {
 	my $converter = $CONVERTERS->{$rule->{type}};
 	return {
 		class => "Atom",
@@ -82,58 +88,71 @@ method _string($rule, $level) {
 	};
 }
 
-method _literal($rule, $level) {
+method _literal($rule, $recursion) {
 	return {class => "Atom", value => $rule->{value}};
 }
 
-method _repetition($rule, $level) {
-
+method _repetition($rule, $recursion) {
 	my $min = $rule->{min};
 	my $count = ($rule->{max} || LONG_MAX) - $min;
 	my @result = ();
 
-	push(@result, $self->_generateChain($rule->{value}, $level + 1)) while $min--;
-	if ( $level < $RECURSION_LIMIT ) {
-		push(@result, $self->_generateChain($rule->{value}, $level + 1)) while $count-- && int(rand(2));
+	$recursion->{level}++;
+	push(@result, $self->_generateChain($rule->{value}, $recursion)) while $min--;
+	if ( $recursion->{level} < $RECURSION_LIMIT ) {
+		push(@result, $self->_generateChain($rule->{value}, $recursion)) while $count-- && int(rand(2));
 	}
+	$recursion->{level}--;
 
 	return {class => "Sequence", value => \@result};
 }
 
-method _proseValue($rule, $level) {
-	return $self->_generateChain($rule->{name}, $level + 1);
+method _proseValue($rule, $recursion) {
+	return $self->_generateChain($rule->{name}, $recursion);
 }
 
-method _reference($rule, $level) {
-	return $self->_generateChain($rule->{name}, $level + 1);
+method _reference($rule, $recursion) {
+	return $self->_generateChain($rule->{name}, $recursion);
 }
 
-method _group($rule, $level) {
-
+method _group($rule, $recursion) {
 	my @result = ();
 	foreach my $elem ( @{$rule->{value}} ) {
-		push(@result, $self->_generateChain($elem, $level + 1));
+		push(@result, $self->_generateChain($elem, $recursion));
 	}
 
 	return {class => "Sequence", value => \@result};
 }
 
-method _choice($rule, $level) {
-
+method _choice($rule, $recursion) {
+	$recursion->{level}++;
 	my @result = ();
-	if ( $level < $RECURSION_LIMIT ) {
+	if ( $recursion->{level} < $RECURSION_LIMIT ) {
 		foreach my $choice ( @{$rule->{value}} ) {
-			push(@result, $self->_generateChain($choice, $level + 1));
+			push(@result, $self->_generateChain($choice, $recursion));
 		}
 	} else {
-		push(@result, $self->_generateChain( $rule->{value}->[ int(rand(@{$rule->{value}})) ], $level + 1 ));
+		$recursion->{choices} ||= {};
+		my $candidate = reduce {
+			if ( not exists($recursion->{choices}->{$a}) ) {
+				$b
+			} elsif ( not exists($recursion->{choices}->{$b}) ) {
+				$a
+			} else {
+				$recursion->{choices}->{$a} <=> $recursion->{choices}->{$b} 
+			}
+		} @{$rule->{value}};
+		$recursion->{choices}->{$candidate}++;
+		push(@result, $self->_generateChain( $candidate, $recursion));
+		$recursion->{choices}->{$candidate}--;
 	}
+	$recursion->{level}--;
 
 	return {class => "Choice", value => \@result};
 }
 
-method _rule($rule, $level) {
-	return $self->_generateChain($rule->{value}, $level + 1);
+method _rule($rule, $recursion) {
+	return $self->_generateChain($rule->{value}, $recursion);
 }
 
 =pod

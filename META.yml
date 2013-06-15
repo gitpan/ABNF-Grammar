@@ -1,5 +1,5 @@
 ---
-abstract: unknown
+abstract: 'Validator and generator module for ABNF grammars'
 author:
   - 'Arseny Krasikov <nyaapa@cpan.org>'
 build_requires:
@@ -26,4 +26,4 @@ requires:
   perl: 5.014
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.06
+version: 0.07

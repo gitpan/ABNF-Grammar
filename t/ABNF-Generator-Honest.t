@@ -27,6 +27,7 @@ ok($@, "Ok no rule");
 
 for ( 1 .. 20 ) {
 	my $str = $honest->generate("expr");
+	warn $str;
 	1 while $str =~ s@[\+\-\*\/]\s\d+\s\d+@0@g;
 	like($str, qr/^\d+$/, "Generated str is ok");
 }

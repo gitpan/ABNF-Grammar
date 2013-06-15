@@ -73,7 +73,7 @@ dies if there is no command like $rule.
 
 =cut
 
-method _rule($rule, $level) {
+method _rule($rule, $recursion) {
 	my $result = "";
 
 	if ( my $prefix = splitRule($rule) ) {
