@@ -97,12 +97,10 @@ method _repetition($rule, $recursion) {
 	my $count = ($rule->{max} || LONG_MAX) - $min;
 	my @result = ();
 
-	$recursion->{level}++;
 	push(@result, $self->_generateChain($rule->{value}, $recursion)) while $min--;
 	if ( $recursion->{level} < $RECURSION_LIMIT ) {
 		push(@result, $self->_generateChain($rule->{value}, $recursion)) while $count-- && int(rand(2));
 	}
-	$recursion->{level}--;
 
 	return {class => "Sequence", value => \@result};
 }

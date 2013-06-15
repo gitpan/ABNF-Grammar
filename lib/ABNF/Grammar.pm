@@ -10,7 +10,7 @@ B<ABNF::Grammar> - class for inner representation ABNF-grammar.
 
 =head1 VERSION
 
-This document describes B<ABNF::Grammar> version 0.07
+This document describes B<ABNF::Grammar> version 0.08
 
 =head1 SYNOPSIS
 
@@ -75,7 +75,7 @@ use Storable qw(dclone);
 
 use base "Exporter";
 our @EXPORT_OK = qw(splitRule Grammar $BASIC_RULES);
-our $VERSION = 0.07;
+our $VERSION = "0.08";
 
 Readonly our $BASIC_RULES => do {
 	my $res = {};
